@@ -5,5 +5,5 @@
 // FormSubmit emails this address a one-time confirmation link. Click it to
 // start receiving messages.
 window.SITE_CONFIG = {
-  CONTACT_EMAIL: "you@example.com",
+  CONTACT_EMAIL: "Dillon.makes@gmail.com",
 };
