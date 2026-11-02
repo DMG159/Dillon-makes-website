@@ -8,7 +8,7 @@
 
 ## Project facts
 - Static site (HTML/CSS/JS, no build step) hosted on **GitHub Pages** from the `main` branch, root folder.
-- Live URL: https://dmg159.github.io/Dillon-makes-website/
+- Domain: **dillonmakes.tech** (registered at Namecheap; set in the `CNAME` file). Original Pages URL: https://dmg159.github.io/Dillon-makes-website/
 - The repo is public.
 - Contact form: FormSubmit, configured in `config.js`.
 - Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Light and dark modes follow the device setting.
