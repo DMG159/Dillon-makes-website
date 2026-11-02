@@ -12,7 +12,7 @@ It's a static site with no build step: plain HTML, CSS and JavaScript.
 | `styles.css` | Styling and responsive layout |
 | `script.js` | Mobile menu, scroll animations, contact form |
 | `config.js` | **Your contact email address** |
-| `favicon.svg` | Browser tab icon |
+| `assets/` | Logo, favicon, app icon and social share image |
 
 ## Set up the contact form
 
