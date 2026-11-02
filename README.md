@@ -1,6 +1,6 @@
 # Dillon Makes
 
-The website for **Dillon Makes**, offering AI training, AI automation pipelines (Zapier, Make, n8n), and AI-built scripts and websites.
+The website for **Dillon Makes**, offering AI training, AI automation pipelines (such as Zapier), and AI-built scripts and websites.
 
 It's a static site with no build step: plain HTML, CSS and JavaScript.
 
