@@ -288,44 +288,7 @@ p { margin: 0 0 1em; }
 .footer-base a:hover { color: var(--text); }
 
 
-/* ===== Light theme (follows the device setting) ===== */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #fafaf8;
-    --panel: #f2f0ec;
-    --panel-2: #eae7e2;
-    --line: rgba(0, 0, 0, 0.1);
-    --line-strong: rgba(0, 0, 0, 0.2);
-    --text: #111;
-    --muted: #5e5e5e;
-    --dim: #9a958e;
-    --soft: #333;
-    --well: #fff;
-    --ink: #111;
-    --hatch: rgba(0, 0, 0, 0.6);
-    --placeholder: #a3a3a3;
-    --header-bg: rgba(250, 250, 248, 0.8);
-    --btn-solid-bg: #111;
-    --btn-solid-fg: #fff;
-    --btn-solid-hover: #8a5a2b;
-    --btn-solid-hover-fg: #fff;
-    --btn-alt-bg: #e8e5e0;
-    --btn-alt-hover: #dcd8d1;
-    --btn-alt-fg: #111;
-    --accent: #a06a35;
-    --accent-strong: #8a5a2b;
-    --accent-text: linear-gradient(90deg, #c08a52, #7d5126);
-    --ring-core: #1f1d1b;
-    --ring-edge: rgba(31, 29, 27, 0.9);
-    --beam: linear-gradient(to top, rgba(212, 168, 122, 0.75), rgba(212, 168, 122, 0.35) 35%, rgba(212, 168, 122, 0) 100%);
-    --logo-filter: brightness(0.78) contrast(1.25) saturate(1.2);
-    --success: #2e7d4f;
-    --error: #b4442f;
-  }
-}
-
-/* Manual choice from the header toggle (saved in a cookie) */
+/* ===== Light theme (only when chosen with the header toggle; saved in a cookie) ===== */
 :root[data-theme="light"] {
   color-scheme: light;
   --bg: #fafaf8;

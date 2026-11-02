@@ -11,5 +11,5 @@
 - Domain: **dillonmakes.tech** (registered at Namecheap; set in the `CNAME` file). Original Pages URL: https://dmg159.github.io/Dillon-makes-website/
 - The repo is public.
 - Contact form: FormSubmit, configured in `config.js`. Contact address `dillon@dillonmakes.tech` forwards to Dillon's Gmail via Namecheap email forwarding.
-- Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Light and dark modes follow the device setting; the header toggle overrides it and saves the choice in a `theme` cookie (1 year).
+- Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Dark mode is the default for everyone (the device setting is ignored); the header toggle switches to light and saves the choice in a `theme` cookie (1 year).
 - Push site changes to `main` so they go live.
