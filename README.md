@@ -34,5 +34,5 @@ then visit http://localhost:8000.
 
 ## Deploy (free options)
 
-- **GitHub Pages:** in the repo, go to Settings → Pages, then deploy from your branch's root folder.
+- **GitHub Pages:** in the repo, go to Settings → Pages, set Source to "Deploy from a branch", then choose the branch and the `/ (root)` folder. The site goes live at `https://dmg159.github.io/Dillon-makes-website/`. The empty `.nojekyll` file tells Pages to serve the files as-is.
 - **Netlify / Cloudflare Pages / Vercel:** import the repo. No build command is needed, and the publish directory is `/`.
