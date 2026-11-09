@@ -273,9 +273,15 @@
               <input id="r-email" name="email" type="email" autocomplete="email" required placeholder="jane@company.com" />
             </div>
           </div>
-          <div class="field">
-            <label for="r-role">Role &amp; business <span class="optional">(optional)</span></label>
-            <input id="r-role" name="role_and_business" type="text" autocomplete="organization-title" placeholder="Owner, Acme Co." />
+          <div class="field-row">
+            <div class="field">
+              <label for="r-role">Role <span class="optional">(optional)</span></label>
+              <input id="r-role" name="role" type="text" autocomplete="organization-title" placeholder="Owner" />
+            </div>
+            <div class="field">
+              <label for="r-business">Business <span class="optional">(optional)</span></label>
+              <input id="r-business" name="business" type="text" autocomplete="organization" placeholder="Acme Co." />
+            </div>
           </div>
           <div class="field">
             <label for="r-review">Your review</label>

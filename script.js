@@ -112,10 +112,11 @@
         quote.textContent = r.quote;
         var cap = document.createElement("figcaption");
         cap.textContent = r.name;
-        if (r.role) {
+        var byline = [r.role, r.business].filter(Boolean).join(", ");
+        if (byline) {
           var role = document.createElement("span");
           role.className = "review-role";
-          role.textContent = r.role;
+          role.textContent = byline;
           cap.appendChild(role);
         }
         fig.appendChild(quote);
