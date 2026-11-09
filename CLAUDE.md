@@ -10,6 +10,8 @@
 - Static site (HTML/CSS/JS, no build step) hosted on **GitHub Pages** from the `main` branch, root folder.
 - Domain: **dillonmakes.tech** (registered at Namecheap; set in the `CNAME` file). Original Pages URL: https://dmg159.github.io/Dillon-makes-website/
 - The repo is public.
-- Contact form: FormSubmit, configured in `config.js`. Contact address `dillon@dillonmakes.tech` forwards to Dillon's Gmail via Namecheap email forwarding.
+- Contact and review forms: FormSubmit, configured in `config.js` (address and spam-word list). Both post directly to FormSubmit so its reCAPTCHA runs, then return via `_next` with `?sent=contact|review`. They also have a honeypot field and ignore submissions sent under 3 seconds after page load.
+- Reviews: submitted at https://dillonmakes.tech/#review and arrive by email; approving one means adding it to `reviews.js`.
+- Contact address `dillon@dillonmakes.tech` forwards to Dillon's Gmail via Namecheap email forwarding.
 - Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Dark mode is the default for everyone (the device setting is ignored); the header toggle switches to light and saves the choice in a `theme` cookie (1 year).
 - Push site changes to `main` so they go live.

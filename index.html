@@ -275,16 +275,20 @@
           </div>
           <div class="field">
             <label for="r-role">Role &amp; business <span class="optional">(optional)</span></label>
-            <input id="r-role" name="role" type="text" autocomplete="organization-title" placeholder="Owner, Acme Co." />
+            <input id="r-role" name="role_and_business" type="text" autocomplete="organization-title" placeholder="Owner, Acme Co." />
           </div>
           <div class="field">
             <label for="r-review">Your review</label>
             <textarea id="r-review" name="review" rows="5" required placeholder="What did we work on, and how did it help?"></textarea>
           </div>
           <label class="check">
-            <input type="checkbox" name="consent" required />
+            <input type="checkbox" name="ok_to_publish" value="Yes" required />
             <span>It's OK to show this review with my name, role and business on dillonmakes.tech.</span>
           </label>
+          <input type="hidden" name="_subject" value="New review for Dillon Makes" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_blacklist" value="" />
+          <input type="hidden" name="_next" value="" />
           <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="btn btn-light btn-block" id="review-submit">Send review</button>
           <p class="form-status" id="review-status" role="status" aria-live="polite"></p>
@@ -318,7 +322,7 @@
           </div>
           <div class="field">
             <label for="company">Business <span class="optional">(optional)</span></label>
-            <input id="company" name="company" type="text" autocomplete="organization" placeholder="Acme Co." />
+            <input id="company" name="business" type="text" autocomplete="organization" placeholder="Acme Co." />
           </div>
           <div class="field">
             <label for="service">Interested in</label>
@@ -333,6 +337,10 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="5" required placeholder="Tell me about your business and what you'd like to improve..."></textarea>
           </div>
+          <input type="hidden" name="_subject" value="New Dillon Makes inquiry" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_blacklist" value="" />
+          <input type="hidden" name="_next" value="" />
           <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="btn btn-light btn-block" id="submit-btn">Send message</button>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>

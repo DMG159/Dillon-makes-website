@@ -95,19 +95,6 @@
     reveals.forEach(function (el) { el.classList.add("visible"); });
   }
 
-  // Send a form to FormSubmit, which forwards it to CONTACT_EMAIL.
-  function sendToFormSubmit(payload) {
-    return fetch("https://formsubmit.co/ajax/" + encodeURIComponent(EMAIL), {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(payload),
-    }).then(function (res) {
-      return res.json().then(function (json) {
-        if (!res.ok || String(json.success) === "false") throw new Error(json.message || "Send failed");
-      });
-    });
-  }
-
   // Reviews: show published reviews from reviews.js, and the "Leave a review" form
   (function () {
     var section = document.getElementById("reviews");
@@ -144,8 +131,6 @@
 
     var rForm = document.getElementById("review-form");
     var rToggle = document.getElementById("review-toggle");
-    var rStatus = document.getElementById("review-status");
-    var rButton = document.getElementById("review-submit");
 
     function openForm() {
       rForm.hidden = false;
@@ -161,7 +146,8 @@
     // dillonmakes.tech/#review scrolls to the review block (id="review") and opens the form.
     // The browser does the scrolling; this just opens the form, including when a
     // #review link is clicked while the address already ends in #review.
-    if (location.hash === "#review") openForm();
+    // (Not when coming back from FormSubmit after sending: show the thank-you instead.)
+    if (location.hash === "#review" && !/[?&]sent=/.test(location.search)) openForm();
     window.addEventListener("hashchange", function () {
       if (location.hash === "#review") openForm();
     });
@@ -169,134 +155,94 @@
       var a = e.target.closest && e.target.closest('a[href="#review"]');
       if (a) openForm();
     });
-
-    function setReviewStatus(msg, type) {
-      rStatus.textContent = msg;
-      rStatus.className = "form-status" + (type ? " " + type : "");
-    }
-
-    rForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      if (!rForm.checkValidity()) {
-        var firstInvalid = rForm.querySelector(":invalid");
-        if (firstInvalid) firstInvalid.focus();
-        setReviewStatus("Please add your name, a valid email, your review, and tick the box.", "error");
-        return;
-      }
-
-      if (rForm.elements["_honey"].value) {
-        rForm.reset();
-        setReviewStatus("Thanks! Your review has been sent.", "success");
-        return;
-      }
-
-      var name = rForm.elements["name"].value.trim();
-      rButton.disabled = true;
-      rButton.textContent = "Sending...";
-      setReviewStatus("");
-
-      sendToFormSubmit({
-        name: name,
-        email: rForm.elements["email"].value.trim(),
-        role_and_business: rForm.elements["role"].value.trim() || "N/A",
-        review: rForm.elements["review"].value.trim(),
-        ok_to_publish: "Yes",
-        _subject: "New review for Dillon Makes from " + name,
-        _replyto: rForm.elements["email"].value.trim(),
-        _template: "table",
-        _captcha: "false",
-      })
-        .then(function () {
-          rForm.reset();
-          setReviewStatus("Thanks, " + name.split(" ")[0] + "! Your review has been sent. It will appear here once it's approved.", "success");
-        })
-        .catch(function () {
-          setReviewStatus("Sorry, that didn't send. Please try again, or email your review to " + EMAIL + ".", "error");
-        })
-        .finally(function () {
-          rButton.disabled = false;
-          rButton.textContent = "Send review";
-        });
-    });
   })();
 
-  // Contact form
-  var form = document.getElementById("contact-form");
-  var status = document.getElementById("form-status");
-  var button = document.getElementById("submit-btn");
-  if (!form) return;
+  // ===== Forms =====
+  // Both forms post straight to FormSubmit, which shows its reCAPTCHA
+  // ("I'm not a robot") and then sends the visitor back here with ?sent=...
+  // FormSubmit also drops anything that fills in the hidden _honey field.
+  var FORM_ACTION = "https://formsubmit.co/" + encodeURIComponent(EMAIL);
+  var SITE_URL = location.protocol === "https:" || location.protocol === "http:"
+    ? location.origin + location.pathname
+    : "https://dillonmakes.tech/";
 
-  function setStatus(msg, type) {
-    status.textContent = msg;
-    status.className = "form-status" + (type ? " " + type : "");
+  // Spam filter words from config.js, sent with each form to FormSubmit
+  var BLOCKED = (config.BLOCKED_WORDS || []).join(", ");
+
+  // Bots tend to submit within moments of the page loading; people can't.
+  var PAGE_OPENED = Date.now();
+  var MIN_SECONDS = 3;
+
+  function setStatus(el, msg, type) {
+    el.textContent = msg;
+    el.className = "form-status" + (type ? " " + type : "");
   }
 
-  function mailtoFallback(data) {
-    var subject = "Website inquiry: " + data.service;
-    var body =
-      "Name: " + data.name + "\n" +
-      "Email: " + data.email + "\n" +
-      (data.company ? "Business: " + data.company + "\n" : "") +
-      "Service: " + data.service + "\n\n" +
-      data.message;
-    window.location.href =
-      "mailto:" + EMAIL +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body);
+  function setUpForm(form, opts) {
+    if (!form) return;
+    form.action = FORM_ACTION;
+    form.method = "POST";
+    form.elements["_next"].value = SITE_URL + "?sent=" + opts.sent + "#" + opts.anchor;
+    form.elements["_blacklist"].value = BLOCKED;
+
+    form.addEventListener("submit", function (e) {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        var firstInvalid = form.querySelector(":invalid");
+        if (firstInvalid) firstInvalid.focus();
+        setStatus(opts.status, opts.invalidMsg, "error");
+        return;
+      }
+      if (form.elements["_honey"].value) {
+        e.preventDefault(); // bot filled the hidden field: send nothing
+        return;
+      }
+      if (Date.now() - PAGE_OPENED < MIN_SECONDS * 1000) {
+        e.preventDefault(); // too fast for a person: likely a bot
+        setStatus(opts.status, "Please take a moment, then send again.", "error");
+        return;
+      }
+      var subject = form.elements["_subject"];
+      subject.value = opts.subject + " from " + form.elements["name"].value.trim();
+      opts.button.disabled = true;
+      opts.button.textContent = "Sending...";
+    });
+
+    // The browser's back button can restore the page with the button still disabled
+    window.addEventListener("pageshow", function () {
+      opts.button.disabled = false;
+      opts.button.textContent = opts.buttonText;
+    });
   }
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    if (!form.checkValidity()) {
-      var firstInvalid = form.querySelector(":invalid");
-      if (firstInvalid) firstInvalid.focus();
-      setStatus("Please fill in your name, a valid email, and a message.", "error");
-      return;
-    }
-
-    // Spam bot filled the hidden field: pretend success, send nothing
-    if (form.elements["_honey"].value) {
-      form.reset();
-      setStatus("Thanks! Your message has been sent.", "success");
-      return;
-    }
-
-    var data = {
-      name: form.elements["name"].value.trim(),
-      email: form.elements["email"].value.trim(),
-      company: form.elements["company"].value.trim(),
-      service: form.elements["service"].value,
-      message: form.elements["message"].value.trim(),
-    };
-
-    button.disabled = true;
-    button.textContent = "Sending...";
-    setStatus("");
-
-    sendToFormSubmit({
-      name: data.name,
-      email: data.email,
-      business: data.company || "N/A",
-      service: data.service,
-      message: data.message,
-      _subject: "New Dillon Makes inquiry from " + data.name,
-      _replyto: data.email,
-      _template: "table",
-      _captcha: "false",
-    })
-      .then(function () {
-        form.reset();
-        setStatus("Thanks, " + data.name.split(" ")[0] + "! Your message has been sent. I'll be in touch soon.", "success");
-      })
-      .catch(function () {
-        setStatus("Couldn't send automatically, so I've opened your email app instead.", "error");
-        mailtoFallback(data);
-      })
-      .finally(function () {
-        button.disabled = false;
-        button.textContent = "Send message";
-      });
+  var reviewStatus = document.getElementById("review-status");
+  setUpForm(document.getElementById("review-form"), {
+    sent: "review", anchor: "review", subject: "New review for Dillon Makes",
+    status: reviewStatus,
+    button: document.getElementById("review-submit"), buttonText: "Send review",
+    invalidMsg: "Please add your name, a valid email, your review, and tick the box.",
   });
+
+  var contactStatus = document.getElementById("form-status");
+  setUpForm(document.getElementById("contact-form"), {
+    sent: "contact", anchor: "contact", subject: "New Dillon Makes inquiry",
+    status: contactStatus,
+    button: document.getElementById("submit-btn"), buttonText: "Send message",
+    invalidMsg: "Please fill in your name, a valid email, and a message.",
+  });
+
+  // Back from FormSubmit: show a thank-you, then tidy the address bar
+  var sent = new URLSearchParams(location.search).get("sent");
+  if (sent === "review") {
+    var cta = document.querySelector(".review-cta p");
+    if (cta) {
+      cta.textContent = "Thanks! Your review has been sent. It will appear here once it's approved.";
+      cta.className = "form-status success";
+    }
+  } else if (sent === "contact" && contactStatus) {
+    setStatus(contactStatus, "Thanks! Your message has been sent. I'll be in touch soon.", "success");
+  }
+  if (sent && history.replaceState) {
+    history.replaceState(null, "", location.pathname + location.hash);
+  }
 })();
