@@ -147,22 +147,28 @@
     var rStatus = document.getElementById("review-status");
     var rButton = document.getElementById("review-submit");
 
-    function openForm(scroll) {
+    function openForm() {
       rForm.hidden = false;
       rToggle.setAttribute("aria-expanded", "true");
-      if (scroll) rToggle.scrollIntoView({ behavior: "smooth", block: "start" });
       document.getElementById("r-name").focus({ preventScroll: true });
     }
 
     rToggle.addEventListener("click", function () {
-      if (rForm.hidden) openForm(false);
+      if (rForm.hidden) openForm();
       else { rForm.hidden = true; rToggle.setAttribute("aria-expanded", "false"); }
     });
 
-    // dillonmakes.tech/#review opens the form directly (handy to send to clients)
-    function checkHash() { if (location.hash === "#review") openForm(true); }
-    window.addEventListener("hashchange", checkHash);
-    checkHash();
+    // dillonmakes.tech/#review scrolls to the review block (id="review") and opens the form.
+    // The browser does the scrolling; this just opens the form, including when a
+    // #review link is clicked while the address already ends in #review.
+    if (location.hash === "#review") openForm();
+    window.addEventListener("hashchange", function () {
+      if (location.hash === "#review") openForm();
+    });
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href="#review"]');
+      if (a) openForm();
+    });
 
     function setReviewStatus(msg, type) {
       rStatus.textContent = msg;
