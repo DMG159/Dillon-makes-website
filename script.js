@@ -95,6 +95,126 @@
     reveals.forEach(function (el) { el.classList.add("visible"); });
   }
 
+  // Send a form to FormSubmit, which forwards it to CONTACT_EMAIL.
+  function sendToFormSubmit(payload) {
+    return fetch("https://formsubmit.co/ajax/" + encodeURIComponent(EMAIL), {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
+    }).then(function (res) {
+      return res.json().then(function (json) {
+        if (!res.ok || String(json.success) === "false") throw new Error(json.message || "Send failed");
+      });
+    });
+  }
+
+  // Reviews: show published reviews from reviews.js, and the "Leave a review" form
+  (function () {
+    var section = document.getElementById("reviews");
+    if (!section) return;
+    var list = document.getElementById("review-list");
+    var head = document.getElementById("reviews-head");
+    var reviews = (window.SITE_REVIEWS || []).filter(function (r) { return r && r.quote && r.name; });
+
+    if (reviews.length) {
+      reviews.forEach(function (r) {
+        var li = document.createElement("li");
+        var fig = document.createElement("figure");
+        fig.className = "review";
+        var quote = document.createElement("blockquote");
+        quote.textContent = r.quote;
+        var cap = document.createElement("figcaption");
+        cap.textContent = r.name;
+        if (r.role) {
+          var role = document.createElement("span");
+          role.className = "review-role";
+          role.textContent = r.role;
+          cap.appendChild(role);
+        }
+        fig.appendChild(quote);
+        fig.appendChild(cap);
+        li.appendChild(fig);
+        list.appendChild(li);
+      });
+      head.hidden = false;
+      list.hidden = false;
+    } else {
+      section.classList.add("is-empty");
+    }
+
+    var rForm = document.getElementById("review-form");
+    var rToggle = document.getElementById("review-toggle");
+    var rStatus = document.getElementById("review-status");
+    var rButton = document.getElementById("review-submit");
+
+    function openForm(scroll) {
+      rForm.hidden = false;
+      rToggle.setAttribute("aria-expanded", "true");
+      if (scroll) rToggle.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("r-name").focus({ preventScroll: true });
+    }
+
+    rToggle.addEventListener("click", function () {
+      if (rForm.hidden) openForm(false);
+      else { rForm.hidden = true; rToggle.setAttribute("aria-expanded", "false"); }
+    });
+
+    // dillonmakes.tech/#review opens the form directly (handy to send to clients)
+    function checkHash() { if (location.hash === "#review") openForm(true); }
+    window.addEventListener("hashchange", checkHash);
+    checkHash();
+
+    function setReviewStatus(msg, type) {
+      rStatus.textContent = msg;
+      rStatus.className = "form-status" + (type ? " " + type : "");
+    }
+
+    rForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      if (!rForm.checkValidity()) {
+        var firstInvalid = rForm.querySelector(":invalid");
+        if (firstInvalid) firstInvalid.focus();
+        setReviewStatus("Please add your name, a valid email, your review, and tick the box.", "error");
+        return;
+      }
+
+      if (rForm.elements["_honey"].value) {
+        rForm.reset();
+        setReviewStatus("Thanks! Your review has been sent.", "success");
+        return;
+      }
+
+      var name = rForm.elements["name"].value.trim();
+      rButton.disabled = true;
+      rButton.textContent = "Sending...";
+      setReviewStatus("");
+
+      sendToFormSubmit({
+        name: name,
+        email: rForm.elements["email"].value.trim(),
+        role_and_business: rForm.elements["role"].value.trim() || "N/A",
+        review: rForm.elements["review"].value.trim(),
+        ok_to_publish: "Yes",
+        _subject: "New review for Dillon Makes from " + name,
+        _replyto: rForm.elements["email"].value.trim(),
+        _template: "table",
+        _captcha: "false",
+      })
+        .then(function () {
+          rForm.reset();
+          setReviewStatus("Thanks, " + name.split(" ")[0] + "! Your review has been sent. It will appear here once it's approved.", "success");
+        })
+        .catch(function () {
+          setReviewStatus("Sorry, that didn't send. Please try again, or email your review to " + EMAIL + ".", "error");
+        })
+        .finally(function () {
+          rButton.disabled = false;
+          rButton.textContent = "Send review";
+        });
+    });
+  })();
+
   // Contact form
   var form = document.getElementById("contact-form");
   var status = document.getElementById("form-status");
@@ -149,26 +269,17 @@
     button.textContent = "Sending...";
     setStatus("");
 
-    fetch("https://formsubmit.co/ajax/" + encodeURIComponent(EMAIL), {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        business: data.company || "N/A",
-        service: data.service,
-        message: data.message,
-        _subject: "New Dillon Makes inquiry from " + data.name,
-        _replyto: data.email,
-        _template: "table",
-        _captcha: "false",
-      }),
+    sendToFormSubmit({
+      name: data.name,
+      email: data.email,
+      business: data.company || "N/A",
+      service: data.service,
+      message: data.message,
+      _subject: "New Dillon Makes inquiry from " + data.name,
+      _replyto: data.email,
+      _template: "table",
+      _captcha: "false",
     })
-      .then(function (res) {
-        return res.json().then(function (json) {
-          if (!res.ok || String(json.success) === "false") throw new Error(json.message || "Send failed");
-        });
-      })
       .then(function () {
         form.reset();
         setStatus("Thanks, " + data.name.split(" ")[0] + "! Your message has been sent. I'll be in touch soon.", "success");

@@ -275,6 +275,22 @@ p { margin: 0 0 1em; }
 .form-status.success { color: var(--success); }
 .form-status.error { color: var(--error); }
 
+/* ===== Reviews ===== */
+[hidden] { display: none !important; }
+.review-list { list-style: none; padding: 0; margin: 0 0 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.review-list li { display: flex; }
+.review { flex: 1; display: flex; flex-direction: column; margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 32px 28px; }
+.review blockquote { margin: 0 0 28px; flex: 1; font-size: 17px; line-height: 1.55; color: var(--soft); }
+.review blockquote::before { content: "\201C"; display: block; margin-bottom: 8px; font: 400 32px/1 var(--mono); color: var(--accent-strong); }
+.review figcaption { padding-top: 16px; border-top: 1px solid var(--line); font: 400 12px/1.5 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.review-role { display: block; color: var(--muted); }
+.review-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.review-cta p { margin: 0; }
+.review-form { max-width: 640px; margin-top: 24px; }
+.check { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 22px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.check input { flex-shrink: 0; width: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--accent); }
+#reviews.is-empty { padding: 56px 0; border-top: 1px solid var(--line); }
+
 /* ===== Footer ===== */
 .site-footer { border-top: 1px solid var(--line); padding: 64px 0 32px; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
@@ -340,7 +356,7 @@ p { margin: 0 0 1em; }
 @media (max-width: 1024px) {
   .hero-grid { grid-template-columns: 1fr; min-height: 0; max-height: none; gap: 0; padding-top: 40px; }
   .hero-visual { min-height: 420px; }
-  .cards { grid-template-columns: 1fr; }
+  .cards, .review-list { grid-template-columns: 1fr; }
   .panel, .about, .contact { grid-template-columns: 1fr; gap: 48px; }
   .panel { gap: 8px; }
   .steps { grid-template-columns: 1fr 1fr; }
@@ -373,6 +389,7 @@ p { margin: 0 0 1em; }
   .step-num { margin-bottom: 20px; }
   .field-row { grid-template-columns: 1fr; gap: 0; }
   .contact-form, .tools { padding: 20px; }
+  .review { padding: 24px 20px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-grid > div:first-child { grid-column: 1 / -1; }
 }

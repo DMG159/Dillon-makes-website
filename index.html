@@ -248,6 +248,50 @@
       </div>
     </section>
 
+    <!-- Reviews -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <header class="section-head reveal" id="reviews-head" hidden>
+          <p class="label"><span class="dot" aria-hidden="true"></span>Reviews</p>
+          <h2>What clients say</h2>
+        </header>
+        <ul class="review-list" id="review-list" hidden></ul>
+
+        <div class="review-cta reveal">
+          <p class="muted">Worked with me? I'd love to hear how it went.</p>
+          <button type="button" class="btn btn-dark btn-small" id="review-toggle" aria-expanded="false" aria-controls="review-form">Leave a review</button>
+        </div>
+
+        <form class="contact-form review-form" id="review-form" novalidate hidden>
+          <div class="field-row">
+            <div class="field">
+              <label for="r-name">Name</label>
+              <input id="r-name" name="name" type="text" autocomplete="name" required placeholder="Jane Smith" />
+            </div>
+            <div class="field">
+              <label for="r-email">Email <span class="optional">(not shown)</span></label>
+              <input id="r-email" name="email" type="email" autocomplete="email" required placeholder="jane@company.com" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="r-role">Role &amp; business <span class="optional">(optional)</span></label>
+            <input id="r-role" name="role" type="text" autocomplete="organization-title" placeholder="Owner, Acme Co." />
+          </div>
+          <div class="field">
+            <label for="r-review">Your review</label>
+            <textarea id="r-review" name="review" rows="5" required placeholder="What did we work on, and how did it help?"></textarea>
+          </div>
+          <label class="check">
+            <input type="checkbox" name="consent" required />
+            <span>It's OK to show this review with my name, role and business on dillonmakes.tech.</span>
+          </label>
+          <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button type="submit" class="btn btn-light btn-block" id="review-submit">Send review</button>
+          <p class="form-status" id="review-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <!-- Contact -->
     <section class="contact-section" id="contact">
       <div class="horizon" aria-hidden="true"></div>
@@ -319,6 +363,7 @@
         <ul>
           <li><a href="#about">About</a></li>
           <li><a href="#process">Process</a></li>
+          <li><a href="#review">Leave a review</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -330,6 +375,7 @@
   </footer>
 
   <script src="config.js"></script>
+  <script src="reviews.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
