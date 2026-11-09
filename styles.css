@@ -284,6 +284,8 @@ p { margin: 0 0 1em; }
 .review blockquote::before { content: "\201C"; display: block; margin-bottom: 8px; font: 400 32px/1 var(--mono); color: var(--accent-strong); }
 .review figcaption { padding-top: 16px; border-top: 1px solid var(--line); font: 400 12px/1.5 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
 .review-role { display: block; color: var(--muted); }
+.review-list li:only-child { grid-column: 1 / -1; max-width: 860px; }
+.review-list li:only-child blockquote { font-size: 19px; }
 .review-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .review-cta p { margin: 0; }
 .review-form { max-width: 640px; margin-top: 24px; }

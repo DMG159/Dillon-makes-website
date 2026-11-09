@@ -10,4 +10,9 @@
 //     role: "Owner, Acme Co.", // optional, leave out or use ""
 //   },
 window.SITE_REVIEWS = [
+  {
+    quote: "I have worked with Dillon Gibson on multiple projects focused on improving and automating business workflows, and the results have been great. His ability to streamline processes and create efficient solutions has saved me countless hours of work. Dillon is knowledgeable, easy to work with, and always quick to respond. He takes the time to understand what I’m trying to accomplish and delivers solutions that make a real difference in my day-to-day operations. I highly recommend Dillon to anyone looking to improve efficiency and automate their business processes.",
+    name: "Mindi Heckendorn",
+    role: "Owner, MH Financial CPA Firm",
+  },
 ];
