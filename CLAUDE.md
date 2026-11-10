@@ -13,5 +13,5 @@
 - Contact and review forms: FormSubmit, configured in `config.js` (address and spam-word list). Both post directly to FormSubmit so its reCAPTCHA runs, then return via `_next` with `?sent=contact|review`. They also have a honeypot field and ignore submissions sent under 3 seconds after page load.
 - Reviews: submitted at https://dillonmakes.tech/#review and arrive by email; approving one means adding it to `reviews.js`.
 - Contact address `dillon@dillonmakes.tech` forwards to Dillon's Gmail via Namecheap email forwarding.
-- Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Dark mode is the default for everyone (the device setting is ignored); the header toggle switches to light and saves the choice in a `theme` cookie (1 year).
+- Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Light/dark follows the device setting by default; the header toggle overrides it and saves the choice in a `theme` cookie (1 year). The logo and "Back to top" links point to `#top`, which is on `<body>` so they scroll all the way up (it used to be on the sticky header, which only scrolled a little).
 - Push site changes to `main` so they go live.

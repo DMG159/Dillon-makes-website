@@ -9,8 +9,9 @@
   <meta property="og:description" content="AI training, automation pipelines, and AI-built scripts and websites." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/og-image.jpg" />
-  <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
   <link rel="icon" href="assets/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,10 +26,10 @@
     })();
   </script>
 </head>
-<body>
+<body id="top">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" id="top">
+  <header class="site-header">
     <nav class="nav container" aria-label="Main">
       <a href="#top" class="logo" aria-label="Dillon Makes home">
         <img class="logo-mark" src="assets/logo.png" alt="" width="160" height="206" />

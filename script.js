@@ -15,14 +15,17 @@
     emailLink.textContent = EMAIL;
   }
 
-  // Light/dark toggle. The site is dark by default; a saved choice (cookie) switches it.
+  // Light/dark toggle. Follows the device setting until the visitor picks one;
+  // their choice is saved in a cookie and wins from then on.
   var root = document.documentElement;
   var themeBtn = document.querySelector(".theme-toggle");
-  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var systemLight = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
   var THEME_COLORS = { dark: "#000000", light: "#fafaf8" };
 
   function currentTheme() {
-    return root.getAttribute("data-theme") === "light" ? "light" : "dark";
+    var chosen = root.getAttribute("data-theme");
+    if (chosen === "light" || chosen === "dark") return chosen;
+    return systemLight && systemLight.matches ? "light" : "dark";
   }
 
   function syncThemeUI() {
@@ -31,7 +34,12 @@
       themeBtn.setAttribute("data-current", theme);
       themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
     }
-    if (themeMeta) themeMeta.setAttribute("content", THEME_COLORS[theme]);
+    // With a saved choice, keep the mobile browser bar in step with it
+    if (root.hasAttribute("data-theme")) {
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+        m.setAttribute("content", THEME_COLORS[theme]);
+      });
+    }
   }
 
   function saveTheme(theme) {
@@ -47,6 +55,10 @@
       saveTheme(next);
       syncThemeUI();
     });
+  }
+  if (systemLight) {
+    if (systemLight.addEventListener) systemLight.addEventListener("change", syncThemeUI);
+    else if (systemLight.addListener) systemLight.addListener(syncThemeUI);
   }
   syncThemeUI();
 
