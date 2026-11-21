@@ -25,6 +25,22 @@
       if (m) document.documentElement.setAttribute("data-theme", m[1]);
     })();
   </script>
+  <script>
+    // Google Analytics (via Google Tag Manager). Only loads after the visitor
+    // accepts the cookie banner; their choice is saved in an "analytics" cookie.
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    window.loadAnalytics = function () {
+      if (window.analyticsLoaded) return;
+      window.analyticsLoaded = true;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtm.js?id=GTM-MCXHXG8W";
+      document.head.appendChild(s);
+    };
+    if (/(?:^|;\s*)analytics=granted/.test(document.cookie)) window.loadAnalytics();
+  </script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -345,9 +361,20 @@
     </div>
     <div class="container footer-base">
       <p>&copy; <span id="year"></span> Dillon Makes. All rights reserved.</p>
-      <a href="#top">Back to top &uarr;</a>
+      <div class="footer-links">
+        <button type="button" class="link-btn" id="cookie-settings">Cookie settings</button>
+        <a href="#top">Back to top &uarr;</a>
+      </div>
     </div>
   </footer>
+
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie consent" hidden>
+    <p>I use Google Analytics cookies to see how visitors use this site. Is that okay?</p>
+    <div class="cookie-actions">
+      <button type="button" class="btn btn-dark btn-small" data-consent="denied">Decline</button>
+      <button type="button" class="btn btn-light btn-small" data-consent="granted">Accept</button>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="reviews.js"></script>

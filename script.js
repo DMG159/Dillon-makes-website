@@ -244,8 +244,53 @@
     invalidMsg: "Please fill in your name, a valid email, and a message.",
   });
 
+  // Cookie banner for Google Analytics. Asks once; the choice is saved in an
+  // "analytics" cookie (1 year) and can be changed from the footer link.
+  var banner = document.getElementById("cookie-banner");
+  var consent = (document.cookie.match(/(?:^|;\s*)analytics=(granted|denied)/) || [])[1];
+
+  function saveConsent(value) {
+    var cookie = "analytics=" + value + "; path=/; max-age=31536000; SameSite=Lax";
+    if (location.protocol === "https:") cookie += "; Secure";
+    document.cookie = cookie;
+  }
+
+  function clearAnalyticsCookies() {
+    var host = location.hostname.replace(/^www\./, "");
+    document.cookie.split(/;\s*/).forEach(function (c) {
+      var name = c.split("=")[0];
+      if (/^_ga/.test(name)) {
+        ["", "; domain=" + host, "; domain=." + host].forEach(function (d) {
+          document.cookie = name + "=; path=/; max-age=0" + d;
+        });
+      }
+    });
+  }
+
+  if (banner) {
+    if (!consent) banner.hidden = false;
+    banner.addEventListener("click", function (e) {
+      var value = e.target.getAttribute("data-consent");
+      if (!value) return;
+      saveConsent(value);
+      banner.hidden = true;
+      if (value === "granted") {
+        window.loadAnalytics && window.loadAnalytics();
+      } else {
+        clearAnalyticsCookies();
+        if (window.analyticsLoaded) location.reload(); // stop the already-running tag
+      }
+    });
+    var settingsBtn = document.getElementById("cookie-settings");
+    if (settingsBtn) settingsBtn.addEventListener("click", function () { banner.hidden = false; });
+  }
+
   // Back from FormSubmit: show a thank-you, then tidy the address bar
   var sent = new URLSearchParams(location.search).get("sent");
+  // Count the submission in Analytics (only sent if the visitor accepted cookies)
+  if ((sent === "contact" || sent === "review") && window.gtag) {
+    window.gtag("event", sent + "_form_sent");
+  }
   if (sent === "review") {
     var cta = document.querySelector(".review-cta p");
     if (cta) {

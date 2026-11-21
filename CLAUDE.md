@@ -14,4 +14,5 @@
 - Reviews: submitted at https://dillonmakes.tech/#review and arrive by email; approving one means adding it to `reviews.js`.
 - Contact address `dillon@dillonmakes.tech` forwards to Dillon's Gmail via Namecheap email forwarding.
 - Brand: wood-grain "DMG" logo in `assets/`, wood tones as the only accent color, minimal black/off-white style with Geist and Geist Mono fonts. Light/dark follows the device setting by default; the header toggle overrides it and saves the choice in a `theme` cookie (1 year). The logo and "Back to top" links point to `#top`, which is on `<body>` so they scroll all the way up (it used to be on the sticky header, which only scrolled a little).
+- Analytics: Google Analytics (GA4 property G-GJEZWDWLBW) loaded through Google Tag Manager container GTM-MCXHXG8W, set up in the `<head>` of `index.html`. It only loads after the visitor accepts the cookie banner (choice saved in an `analytics` cookie, 1 year; "Cookie settings" in the footer reopens it). Form submissions send `contact_form_sent` / `review_form_sent` events.
 - Push site changes to `main` so they go live.
